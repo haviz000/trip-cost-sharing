@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --font-display: 'Sora', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --bg-base: #0F1117;
+  --bg-card: #1A1D2E;
+  --bg-card-hover: #222540;
+  --text-primary: #E8EAF6;
+  --text-secondary: #8B8FA8;
+  --accent: #FF6B35;
+  --accent-soft: rgba(255, 107, 53, 0.15);
+  --gradient-hero: linear-gradient(135deg, #FF6B35 0%, #E03E3E 40%, #7C3AED 100%);
+  --gradient-detail: linear-gradient(135deg, #1E3A5F 0%, #2D1B69 100%);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.35);
+  --border: rgba(255,255,255,0.07);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero-header {
+  background: var(--gradient-hero);
+  padding: 48px 0 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.hero-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* Detail hero */
+.detail-hero {
+  background: var(--gradient-detail);
+  padding: 32px 0 48px;
+  position: relative;
+}
+
+.detail-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: var(--bg-base);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Page container */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  padding-top: 50px;
+}
+
+/* Cards */
+.glass-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-card) !important;
+  border-radius: 14px !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.trip-card {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.trip-card:hover {
+  box-shadow: 0 8px 40px rgba(255,107,53,0.2) !important;
+  transform: translateY(-3px);
+}
+
+.trip-card .ant-card-actions {
+  background: rgba(255,255,255,0.03) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+.trip-card-emoji {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.trip-stat {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.trip-total {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.trip-card-cta {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: var(--font-display);
+}
+
+.trip-card:hover .trip-card-cta {
+  opacity: 1;
+}
+
+/* Sections */
+.section-card .ant-card-head {
+  border-bottom: 1px solid var(--border) !important;
+  background: rgba(255,255,255,0.02) !important;
+}
+
+/* Participant items */
+.participant-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.participant-item:hover {
+  background: rgba(255,255,255,0.07);
+}
+
+/* Stats */
+.stat-card {
+  padding: 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+/* Tables */
+.expense-table .ant-table-thead > tr > th {
+  background: rgba(255,255,255,0.04) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-display);
+}
+
+.expense-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+.expense-table .ant-table-tbody > tr:hover > td {
+  background: rgba(255,255,255,0.04) !important;
+}
+
+.settlement-table .ant-table-tbody > tr > td:nth-child(2) {
+  padding: 0 !important;
+}
+
+/* Button */
+.btn-primary {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+}
+
+.btn-primary:hover {
+  background: #e05a25 !important;
+  border-color: #e05a25 !important;
+}
+
+/* Ant overrides */
+.ant-card-head-title {
+  font-family: var(--font-display);
+}
+
+.ant-breadcrumb {
+  font-family: var(--font-body);
+}
+
+.ant-modal-title {
+  font-family: var(--font-display) !important;
+}
+
+.ant-statistic-title {
+  font-family: var(--font-body);
+}
+
+.ant-statistic-content {
+  font-family: var(--font-display) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
