@@ -39,6 +39,7 @@ interface FormValues {
   amount: number;
   paidBy: string;
   date: dayjs.Dayjs;
+  splitBetween: string[];
 }
 
 const ExpenseSection: React.FC<Props> = ({ expenses, participants, onAdd, onUpdate, onDelete }) => {
@@ -54,20 +55,28 @@ const ExpenseSection: React.FC<Props> = ({ expenses, participants, onAdd, onUpda
         amount: expense.amount,
         paidBy: expense.paidBy,
         date: dayjs(expense.createdAt),
+        splitBetween: expense.splitBetween || participants.map(p => p.id),
       });
     } else {
-      form.setFieldsValue({ title: '', amount: undefined, paidBy: undefined, date: dayjs() });
+      form.setFieldsValue({
+        title: '',
+        amount: undefined,
+        paidBy: undefined,
+        date: dayjs(),
+        splitBetween: participants.map(p => p.id), // Default to all participants
+      });
     }
     setModalOpen(true);
   };
 
   const handleSubmit = () => {
-    form.validateFields().then(({ title, amount, paidBy, date }) => {
+    form.validateFields().then(({ title, amount, paidBy, date, splitBetween }) => {
       const data = {
         title: title.trim(),
         amount,
         paidBy,
         createdAt: date.toISOString(),
+        splitBetween: splitBetween.length === participants.length ? undefined : splitBetween,
       };
       if (editing) {
         onUpdate(editing.id, data);
@@ -112,6 +121,34 @@ const ExpenseSection: React.FC<Props> = ({ expenses, participants, onAdd, onUpda
           {participantName(v)}
         </Tag>
       ),
+    },
+    {
+      title: 'Split Between',
+      dataIndex: 'splitBetween',
+      key: 'splitBetween',
+      render: (_: unknown, record: Expense) => {
+        const splitParticipants = record.splitBetween
+          ? record.splitBetween
+          : participants.map(p => p.id);
+
+        if (splitParticipants.length === participants.length) {
+          return (
+            <Tag color="green" style={{ fontWeight: 500 }}>
+              All ({participants.length})
+            </Tag>
+          );
+        }
+
+        return (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {splitParticipants.map(id => (
+              <Tag key={id} color="cyan" style={{ fontSize: 11, margin: 0 }}>
+                {participantName(id)}
+              </Tag>
+            ))}
+          </div>
+        );
+      },
     },
     {
       title: 'Date',
@@ -206,7 +243,7 @@ const ExpenseSection: React.FC<Props> = ({ expenses, participants, onAdd, onUpda
         okText={editing ? 'Save' : 'Add'}
         okButtonProps={{ className: 'btn-primary' }}
         destroyOnClose
-        width={480}
+        width={520}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item
@@ -239,6 +276,54 @@ const ExpenseSection: React.FC<Props> = ({ expenses, participants, onAdd, onUpda
             rules={[{ required: true, message: 'Please select who paid' }]}
           >
             <Select placeholder="Select participant" size="large">
+              {participants.map((p) => (
+                <Select.Option key={p.id} value={p.id}>
+                  {p.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="splitBetween"
+            label="Split Between"
+            rules={[
+              { required: true, message: 'Please select at least one participant' },
+              {
+                validator: (_, value) => {
+                  if (value && value.length > 0) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('At least one participant must be selected'));
+                },
+              },
+            ]}
+            extra={
+              <Space style={{ marginTop: 4 }}>
+                <Button
+                  size="small"
+                  type="link"
+                  onClick={() => form.setFieldsValue({ splitBetween: participants.map(p => p.id) })}
+                  style={{ padding: 0, height: 'auto' }}
+                >
+                  Select All
+                </Button>
+                <Button
+                  size="small"
+                  type="link"
+                  onClick={() => form.setFieldsValue({ splitBetween: [] })}
+                  style={{ padding: 0, height: 'auto' }}
+                >
+                  Clear All
+                </Button>
+              </Space>
+            }
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select who needs to pay (default: All)"
+              size="large"
+              maxTagCount="responsive"
+            >
               {participants.map((p) => (
                 <Select.Option key={p.id} value={p.id}>
                   {p.name}

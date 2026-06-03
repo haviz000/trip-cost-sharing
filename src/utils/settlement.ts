@@ -4,19 +4,29 @@ export const calculateSummary = (
   participants: Participant[],
   expenses: Expense[]
 ): ParticipantSummary[] => {
-  const total = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const share = participants.length > 0 ? total / participants.length : 0;
-
   return participants.map((p) => {
+    // Calculate how much this participant paid
     const paid = expenses
       .filter((e) => e.paidBy === p.id)
       .reduce((sum, e) => sum + e.amount, 0);
+
+    // Calculate how much this participant owes (their share of expenses)
+    let owes = 0;
+    expenses.forEach((expense) => {
+      const splitParticipants = expense.splitBetween || participants.map(pt => pt.id);
+
+      // Only count if this participant is in the split
+      if (splitParticipants.includes(p.id)) {
+        owes += expense.amount / splitParticipants.length;
+      }
+    });
+
     return {
       id: p.id,
       name: p.name,
       paid,
-      share,
-      balance: paid - share,
+      share: owes,
+      balance: paid - owes,
     };
   });
 };

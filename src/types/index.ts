@@ -9,6 +9,7 @@ export interface Expense {
   amount: number;
   paidBy: string;
   createdAt: string;
+  splitBetween?: string[]; // Array of participant IDs, undefined means split between all
 }
 
 export interface Trip {
